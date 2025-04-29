@@ -1,6 +1,46 @@
-body{
-background-color:grey;    
+/* Reset some default spacing */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
 }
-h1{
-    colour:yellow;
+
+/* Header styling */
+header {
+  background: #1e90ff;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* Navigation bar styling */
+nav {
+  background: #333;
+  padding: 10px 0;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Main content styling */
+main {
+  padding: 20px;
+  background: #f4f4f4;
+}
+
+/* Footer styling */
+footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
 }

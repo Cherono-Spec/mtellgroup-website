@@ -91,7 +91,11 @@
     <img src="https://via.placeholder.com/300x200?text=Product+2" alt="Product 2">
     <img src="https://via.placeholder.com/300x200?text=Product+3" alt="Product 3">
   </section>
-
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+  <input type="hidden" name="cmd" value="_s-xclick">
+  <input type="hidden" name="hosted_button_id" value="YOUR_BUTTON_ID">
+  <input type="submit" value="Pay with PayPal">
+</form>
   <section id="contact">
     <h2>Contact Us</h2>
     <form class="contact-form">
@@ -101,11 +105,7 @@
       <button type="submit">Send</button>
     </form>
   </section>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-  <input type="hidden" name="cmd" value="_s-xclick">
-  <input type="hidden" name="hosted_button_id" value="YOUR_BUTTON_ID">
-  <input type="submit" value="Pay with PayPal">
-</form>
+
 
   <footer>
     <p>&copy; 2026 My E-commerce Business. All rights reserved.</p>

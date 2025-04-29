@@ -1,10 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NAROOSURA IMAGE</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My E-commerce Business</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #333;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #444;
+    }
+    nav a {
+      color: white;
+      padding: 1rem;
+      text-decoration: none;
+      display: block;
+    }
+    nav a:hover {
+      background: #555;
+    }
+    section {
+      padding: 2rem;
+    }
+    .gallery img {
+      width: 100%;
+      max-width: 300px;
+      margin: 1rem;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+    }
+    .contact-form input, .contact-form textarea {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+    }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    @media (min-width: 600px) {
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>OUR BODY</h1>
-    <img src="https://example.com/image.jpg" alt="Description of image" width="500">
+
+  <header>
+    <h1>My E-Commerce Business</h1>
+  </header>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <section id="home">
+    <h2>Welcome to Our Store!</h2>
+    <p>Find the best products at unbeatable prices.</p>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>We are a dedicated team delivering high-quality goods to customers worldwide.</p>
+  </section>
+
+  <section id="gallery" class="gallery">
+    <h2>Product Gallery</h2>
+    <img src="https://via.placeholder.com/300x200?text=Product+1" alt="Product 1">
+    <img src="https://via.placeholder.com/300x200?text=Product+2" alt="Product 2">
+    <img src="https://via.placeholder.com/300x200?text=Product+3" alt="Product 3">
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <form class="contact-form">
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 My E-commerce Business. All rights reserved.</p>
+  </footer>
+
 </body>
 </html>
+

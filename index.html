@@ -101,6 +101,28 @@
       <button type="submit">Send</button>
     </form>
   </section>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+  <input type="hidden" name="cmd" value="_s-xclick">
+  <input type="hidden" name="hosted_button_id" value="YOUR_BUTTON_ID">
+  <button class="paypal-button">Pay with PayPal</button>
+</form>
+
+<style>
+  .paypal-button {
+    background: #ffc439; /* PayPal yellow */
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .paypal-button:hover {
+    background: #ffac1b; /* Darker shade for hover effect */
+  }
+</style>
 
 
   <footer>

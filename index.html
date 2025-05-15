@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Integrated Website</title>
+  <title>Mtell online Shopping</title>
+  <meta name="description" content="Contact us at My Integrated Website for inquiries or support.">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,6 +24,10 @@
       color: #fff;
       margin: 0 15px;
       text-decoration: none;
+    }
+
+    nav a.active {
+      border-bottom: 2px solid #fff;
     }
 
     main {
@@ -70,7 +75,7 @@
   <header>
     <h1>My Integrated Website</h1>
     <nav>
-      <a href="#">Home</a>
+      <a href="#" class="active">Home</a>
       <a href="#">About</a>
       <a href="#">Contact</a>
     </nav>
@@ -88,7 +93,7 @@
       <label for="message">Message:</label>
       <textarea id="message" name="message" rows="4" required></textarea>
 
-      <button type="submit">Send</button>
+      <button type="submit" aria-label="Send message">Send</button>
     </form>
     <div id="responseMessage" style="text-align: center; color: green;"></div>
   </main>
@@ -100,15 +105,43 @@
   <script>
     document.getElementById("contactForm").addEventListener("submit", function(event) {
       event.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const message = document.getElementById("message").value;
 
-      document.getElementById("responseMessage").innerText = 
-        `Thank you, ${name}! We have received your message.`;
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const responseMessage = document.getElementById("responseMessage");
 
-      // You can replace this with a real backend/API call
-      console.log("Form submitted:", { name, email, message });
+      // Simple email validation
+      if (!email.includes("@") || !email.includes(".")) {
+        responseMessage.style.color = "red";
+        responseMessage.innerText = "Please enter a valid email address.";
+        return;
+      }
+
+      // Show temporary feedback
+      responseMessage.style.color = "green";
+      responseMessage.innerText = `Thank you, ${name}! We have received your message.`;
+
+      // Simulate sending data to a backend (replace with real URL if needed)
+      fetch("https://example.com/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, message })
+      })
+      .then(response => {
+        if (response.ok) {
+          responseMessage.innerText = "Message sent successfully!";
+        } else {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .catch(error => {
+        responseMessage.style.color = "red";
+        responseMessage.innerText = "An error occurred while sending your message.";
+        console.error("Form error:", error);
+      });
 
       // Reset form
       this.reset();
@@ -117,3 +150,4 @@
 
 </body>
 </html>
+

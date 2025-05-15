@@ -1,3 +1,60 @@
-function sayHello() {
-    alert("Hello! Thanks for visiting.");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("contactForm");
+  const responseMessage = document.getElementById("responseMessage");
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // Get form data
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    // Validate email
+    if (!isValidEmail(email)) {
+      displayMessage("Please enter a valid email address.", "red");
+      return;
+    }
+
+    // Provide temporary user feedback
+    displayMessage(`Thank you, ${name}! We have received your message.`, "green");
+
+    // Simulate backend submission
+    submitFormData({ name, email, message });
+    
+    // Reset form
+    form.reset();
+  });
+
+  function isValidEmail(email) {
+    // Simple regex for basic validation
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
   }
+
+  function displayMessage(message, color = "green") {
+    responseMessage.innerText = message;
+    responseMessage.style.color = color;
+  }
+
+  function submitFormData(data) {
+    fetch("https://example.com/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (res.ok) {
+          displayMessage("Message sent successfully!", "green");
+        } else {
+          throw new Error("Failed to submit");
+        }
+      })
+      .catch((err) => {
+        console.error("Submission error:", err);
+        displayMessage("An error occurred. Please try again later.", "red");
+      });
+  }
+});

@@ -2,124 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Integrated Webpage</title>
-  <style>
-    /* Basic Reset and Styling */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; line-height: 1.6; background: #f4f4f4; color: #333; transition: opacity 0.5s ease-in-out; }
-    header { background: #333; color: #fff; padding: 1rem; text-align: center; }
-    nav ul { list-style: none; display: flex; justify-content: center; gap: 2rem; }
-    nav a { color: white; text-decoration: none; }
-    nav a:hover { text-decoration: underline; }
-    section { padding: 2rem; max-width: 900px; margin: auto; }
-    h1, h2 { margin-bottom: 1rem; }
-    form input, form textarea { width: 100%; padding: 10px; margin: 10px 0; }
-    button { padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer; }
-    button:hover { background: #555; }
-
-    /* Animations */
-    .fade-in { animation: fadeIn 1s ease-in forwards; opacity: 0; }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retail Shop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
-<body class="fade-in">
+<body class="bg-gray-50 text-gray-800">
 
-  <header>
-    <h1>My Integrated Webpage</h1>
+  <!-- Navigation -->
+  <header class="bg-white shadow-md p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Retail Shop</h1>
     <nav>
-      <ul>
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+      <a href="#" class="mx-2 hover:underline">Home</a>
+      <a href="#" class="mx-2 hover:underline">Products</a>
+      <a href="#" class="mx-2 hover:underline">Cart</a>
     </nav>
   </header>
 
-  <section id="hero">
-    <h2>Welcome</h2>
-    <p>This is a modern integrated webpage with animations, local storage, and Firebase support.</p>
+  <!-- Hero Section -->
+  <section class="text-center py-10 bg-gradient-to-r from-indigo-500 to-blue-500 text-white">
+    <h2 class="text-4xl font-bold mb-2">Welcome to Our Shop!</h2>
+    <p class="text-lg">Explore the best products at unbeatable prices.</p>
   </section>
 
-  <section id="about">
-    <h2>About</h2>
-    <p>This webpage is built with HTML, CSS, JavaScript, and optional Firebase integration. It includes animations, page transitions, and a contact form with local storage.</p>
+  <!-- Product Listing -->
+  <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6" id="product-list">
+    <!-- Products will be injected here via Firebase -->
+  </main>
+
+  <!-- Cart Section -->
+  <section class="p-6 bg-white shadow mt-6 max-w-xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-4">Cart</h2>
+    <div id="cart-items"></div>
+    <button class="bg-green-500 text-white px-4 py-2 mt-4 rounded">Checkout</button>
   </section>
 
-  <section id="contact">
-    <h2>Contact Us</h2>
-    <form id="contactForm">
-      <input type="text" id="name" placeholder="Your Name" required>
-      <input type="email" id="email" placeholder="Your Email" required>
-      <textarea id="message" placeholder="Your Message" required></textarea>
-      <button type="submit">Send</button>
+  <!-- Contact/Order Form -->
+  <section class="p-6 max-w-xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-4">Place an Order</h2>
+    <form id="order-form" class="space-y-4">
+      <input type="text" placeholder="Your Name" class="w-full p-2 border rounded" required />
+      <input type="email" placeholder="Email" class="w-full p-2 border rounded" required />
+      <textarea placeholder="Address" class="w-full p-2 border rounded" required></textarea>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
     </form>
-    <p id="status"></p>
   </section>
 
+  <!-- Footer -->
+  <footer class="text-center p-4 mt-10 text-sm text-gray-500">
+    &copy; 2025 Retail Shop. All rights reserved.
+  </footer>
+
+  <!-- Firebase + Script -->
   <script>
-    // Page transition effect
-    document.body.style.opacity = 1;
-    window.addEventListener("beforeunload", () => {
-      document.body.style.opacity = 0;
-    });
-
-    // Local storage handling
-    const form = document.getElementById('contactForm');
-    const status = document.getElementById('status');
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const message = document.getElementById('message').value.trim();
-
-      // Save locally
-      const contactData = { name, email, message };
-      localStorage.setItem('contactFormData', JSON.stringify(contactData));
-      status.textContent = "Saved locally!";
-
-      // OPTIONAL: Send to Firebase
-      if (typeof firebase !== 'undefined') {
-        const db = firebase.firestore();
-        db.collection("contacts").add(contactData)
-          .then(() => status.textContent = "Message sent to Firebase!")
-          .catch((err) => status.textContent = "Error: " + err.message);
-      }
-    });
-
-    // Autofill if previously saved
-    window.addEventListener('load', () => {
-      const data = JSON.parse(localStorage.getItem('contactFormData'));
-      if (data) {
-        document.getElementById('name').value = data.name;
-        document.getElementById('email').value = data.email;
-        document.getElementById('message').value = data.message;
-      }
-    });
-  </script>
-
-  <!-- Firebase SDK (Optional) -->
-  <!-- Uncomment and add your config if using Firebase -->
-  <!--
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
-  <script>
+    // Firebase config
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
       projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-  </script>
-  -->
 
+    // Fetch products from Firestore
+    const productList = document.getElementById('product-list');
+    db.collection("products").get().then((snapshot) => {
+      snapshot.forEach(doc => {
+        const product = doc.data();
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded shadow";
+        div.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover rounded">
+          <h3 class="text-lg font-bold mt-2">${product.name}</h3>
+          <p class="text-gray-600">$${product.price}</p>
+          <button class="bg-indigo-500 text-white px-3 py-1 mt-2 rounded">Add to Cart</button>
+        `;
+        productList.appendChild(div);
+      });
+    });
+
+    // Handle order form submission
+    document.getElementById('order-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const name = form[0].value;
+      const email = form[1].value;
+      const address = form[2].value;
+
+      await db.collection("orders").add({ name, email, address, timestamp: new Date() });
+      alert("Order submitted!");
+      form.reset();
+    });
+  </script>
 </body>
 </html>
-

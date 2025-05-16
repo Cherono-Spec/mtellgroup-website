@@ -1,153 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mtell online Shopping</title>
-  <meta name="description" content="Contact us at Mtell Online Shopping for inquiries or support.">
+  <title>Integrated Webpage</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
+    /* Basic Reset and Styling */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; background: #f4f4f4; color: #333; transition: opacity 0.5s ease-in-out; }
+    header { background: #333; color: #fff; padding: 1rem; text-align: center; }
+    nav ul { list-style: none; display: flex; justify-content: center; gap: 2rem; }
+    nav a { color: white; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    section { padding: 2rem; max-width: 900px; margin: auto; }
+    h1, h2 { margin-bottom: 1rem; }
+    form input, form textarea { width: 100%; padding: 10px; margin: 10px 0; }
+    button { padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer; }
+    button:hover { background: #555; }
 
-    header {
-      background-color: #333;
-      color: #fff;
-      padding: 1rem 2rem;
-      text-align: center;
-    }
-
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-    }
-
-    nav a.active {
-      border-bottom: 2px solid #fff;
-    }
-
-    main {
-      padding: 2rem;
-    }
-
-    form {
-      background-color: #fff;
-      padding: 1rem;
-      max-width: 400px;
-      margin: 2rem auto;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      padding: 0.5rem 1rem;
-      background-color: #007BFF;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #333;
-      color: white;
-      margin-top: 2rem;
+    /* Animations */
+    .fade-in { animation: fadeIn 1s ease-in forwards; opacity: 0; }
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
-<body>
+<body class="fade-in">
 
   <header>
-    <h1>Mtell Online Shopping</h1>
+    <h1>My Integrated Webpage</h1>
     <nav>
-      <a href="#" class="active">Home</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </nav>
   </header>
 
-  <main>
+  <section id="hero">
+    <h2>Welcome</h2>
+    <p>This is a modern integrated webpage with animations, local storage, and Firebase support.</p>
+  </section>
+
+  <section id="about">
+    <h2>About</h2>
+    <p>This webpage is built with HTML, CSS, JavaScript, and optional Firebase integration. It includes animations, page transitions, and a contact form with local storage.</p>
+  </section>
+
+  <section id="contact">
     <h2>Contact Us</h2>
     <form id="contactForm">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required />
-
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required />
-
-      <label for="message">Message:</label>
-      <textarea id="message" name="message" rows="4" required></textarea>
-
-      <button type="submit" aria-label="Send message">Send</button>
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <textarea id="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
     </form>
-    <div id="responseMessage" style="text-align: center; color: green;"></div>
-  </main>
-
-  <footer>
-    &copy; 2025 Mtell Online Shopping. All rights reserved.
-  </footer>
+    <p id="status"></p>
+  </section>
 
   <script>
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
-      event.preventDefault();
+    // Page transition effect
+    document.body.style.opacity = 1;
+    window.addEventListener("beforeunload", () => {
+      document.body.style.opacity = 0;
+    });
 
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
-      const responseMessage = document.getElementById("responseMessage");
+    // Local storage handling
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('status');
 
-      // Simple email validation
-      if (!email.includes("@") || !email.includes(".")) {
-        responseMessage.style.color = "red";
-        responseMessage.innerText = "Please enter a valid email address.";
-        return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      // Save locally
+      const contactData = { name, email, message };
+      localStorage.setItem('contactFormData', JSON.stringify(contactData));
+      status.textContent = "Saved locally!";
+
+      // OPTIONAL: Send to Firebase
+      if (typeof firebase !== 'undefined') {
+        const db = firebase.firestore();
+        db.collection("contacts").add(contactData)
+          .then(() => status.textContent = "Message sent to Firebase!")
+          .catch((err) => status.textContent = "Error: " + err.message);
       }
+    });
 
-      // Show temporary feedback
-      responseMessage.style.color = "green";
-      responseMessage.innerText = `Thank you, ${name}! We have received your message.`;
-
-      // Simulate sending data to a backend (replace with real URL if needed)
-      fetch("https://example.com/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name, email, message })
-      })
-      .then(response => {
-        if (response.ok) {
-          responseMessage.innerText = "Message sent successfully!";
-        } else {
-          throw new Error("Network response was not ok");
-        }
-      })
-      .catch(error => {
-        responseMessage.style.color = "red";
-        responseMessage.innerText = "An error occurred while sending your message.";
-        console.error("Form error:", error);
-      });
-
-      // Reset form
-      this.reset();
+    // Autofill if previously saved
+    window.addEventListener('load', () => {
+      const data = JSON.parse(localStorage.getItem('contactFormData'));
+      if (data) {
+        document.getElementById('name').value = data.name;
+        document.getElementById('email').value = data.email;
+        document.getElementById('message').value = data.message;
+      }
     });
   </script>
+
+  <!-- Firebase SDK (Optional) -->
+  <!-- Uncomment and add your config if using Firebase -->
+  <!--
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+  -->
 
 </body>
 </html>

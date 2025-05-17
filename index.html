@@ -56,47 +56,132 @@
 
   <!-- Firebase + Script -->
   <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  <!-- /js/firebase.js -->
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
-    // Fetch products from Firestore
-    const productList = document.getElementById('product-list');
-    db.collection("products").get().then((snapshot) => {
-      snapshot.forEach(doc => {
-        const product = doc.data();
-        const div = document.createElement("div");
-        div.className = "bg-white p-4 rounded shadow";
-        div.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover rounded">
-          <h3 class="text-lg font-bold mt-2">${product.name}</h3>
-          <p class="text-gray-600">$${product.price}</p>
-          <button class="bg-indigo-500 text-white px-3 py-1 mt-2 rounded">Add to Cart</button>
-        `;
-        productList.appendChild(div);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
+<!-- /js/products.js -->
+document.addEventListener("DOMContentLoaded", () => {
+  const productList = document.getElementById("product-list") || document.getElementById("featured-products");
+  const searchInput = document.getElementById("search");
+
+  const renderProduct = (product, id) => {
+    const div = document.createElement("div");
+    div.className = "bg-white p-4 shadow rounded";
+    div.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover">
+      <h3 class="text-lg font-bold mt-2">${product.name}</h3>
+      <p class="text-gray-600">$${product.price}</p>
+      <button onclick="addToCart('${id}')" class="bg-blue-500 text-white px-3 py-1 mt-2 rounded">Add to Cart</button>
+    `;
+    productList.appendChild(div);
+  };
+
+  db.collection("products").onSnapshot(snapshot => {
+    productList.innerHTML = "";
+    snapshot.forEach(doc => {
+      const product = doc.data();
+      if (!searchInput || product.name.toLowerCase().includes(searchInput.value.toLowerCase())) {
+        renderProduct(product, doc.id);
+      }
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      productList.innerHTML = "Loading...";
+      db.collection("products").get().then(snapshot => {
+        productList.innerHTML = "";
+        snapshot.forEach(doc => {
+          const product = doc.data();
+          if (product.name.toLowerCase().includes(searchInput.value.toLowerCase())) {
+            renderProduct(product, doc.id);
+          }
+        });
       });
     });
+  }
+});
 
-    // Handle order form submission
-    document.getElementById('order-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const name = form[0].value;
-      const email = form[1].value;
-      const address = form[2].value;
+function addToCart(id) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push(id);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Product added to cart");
+}
 
-      await db.collection("orders").add({ name, email, address, timestamp: new Date() });
-      alert("Order submitted!");
-      form.reset();
+
+<!-- /js/cart.js -->
+document.addEventListener("DOMContentLoaded", async () => {
+  const cartContainer = document.getElementById("cart-items");
+  const totalEl = document.getElementById("cart-total");
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let total = 0;
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  for (let id of cart) {
+    const doc = await db.collection("products").doc(id).get();
+    if (doc.exists) {
+      const product = doc.data();
+      total += parseFloat(product.price);
+      const div = document.createElement("div");
+      div.className = "flex justify-between items-center p-2 border-b";
+      div.innerHTML = `
+        <span>${product.name}</span>
+        <span>$${product.price}</span>
+      `;
+      cartContainer.appendChild(div);
+    }
+  }
+
+  totalEl.textContent = total.toFixed(2);
+});
+
+
+<!-- /js/admin.js -->
+document.addEventListener("DOMContentLoaded", () => {
+  const addForm = document.getElementById("add-product");
+  const productContainer = document.getElementById("admin-products");
+
+  addForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = addForm.name.value;
+    const price = addForm.price.value;
+    const image = addForm.image.value;
+
+    await db.collection("products").add({ name, price, image });
+    alert("Product added");
+    addForm.reset();
+  });
+
+  db.collection("products").onSnapshot(snapshot => {
+    productContainer.innerHTML = "";
+    snapshot.forEach(doc => {
+      const product = doc.data();
+      const div = document.createElement("div");
+      div.className = "p-2 border mb-2";
+      div.innerHTML = `<strong>${product.name}</strong> - $${product.price}`;
+      productContainer.appendChild(div);
     });
+  });
+});
+
   </script>
 </body>
 </html>
